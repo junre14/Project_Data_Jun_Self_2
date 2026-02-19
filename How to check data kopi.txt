@@ -1,0 +1,258 @@
+How to check data kopi:
+1. Cek data dari excel dulu by sort. Raw data -> buka di notepad -> buka di excel -> rapikan baris -> sort excel
+2. buat di postgre table dll pakai text. view all data
+3. Cek distinct
+4. Cek null
+5. cek data duplikat
+6. cek data format
+
+pertanyaan:
+- ada berapa total transaksi
+- transaksi masing-masing tanggal
+- menu apa yang disukai
+- berapa total revenue kotor
+- berapa total revenue di tgl tsb
+- metode pembayaran yang disukai apa
+- apakah ada pelanggan yang paling sering beli dan menunya apa?
+- di jam berapa pembelian ramai?
+
+Query 1
+
+-- Query Kopi 1
+
+-- query seluruhnya
+-- select * 
+-- from "Skema_3"."Kopi_satu";
+
+-- 1. ada berapa total transaksi
+-- select count(*)
+-- from "Skema_3"."Kopi_satu";
+
+-- 2. transaksi masing-masing tanggal
+-- select tanggal, count(*)
+-- from "Skema_3"."Kopi_satu"
+-- group by tanggal
+-- order by tanggal asc;
+
+-- 3. menu apa yang disukai
+-- select menu, count(*) as total
+-- from "Skema_3"."Kopi_satu"
+-- group by menu
+-- order by total desc
+-- limit 1
+
+-- 4. berapa total revenue kotor
+-- select sum(harga)
+-- from "Skema_3"."Kopi_satu";
+
+-- 5. berapa total revenue di tgl tsb?
+-- select tanggal, sum(harga) as rev
+-- from "Skema_3"."Kopi_satu"
+-- group by tanggal
+-- order by tanggal asc;
+
+-- 6. revenue tertinggi di tanggal berapa?
+-- select tanggal, sum(harga) as rev
+-- from "Skema_3"."Kopi_satu"
+-- group by tanggal
+-- order by rev desc
+-- limit 1;
+
+-- 7. metode pembayaran yang disukai apa
+-- select pembayaran, count(*) as ditotalin
+-- from "Skema_3"."Kopi_satu"
+-- group by pembayaran
+-- order by ditotalin desc;
+
+-- 8. apakah ada pelanggan yang paling sering beli dan menunya apa?
+-- pelanggan hanya dibatasi oleh card number karena keterbatasan data
+-- select kartu, count(*) as nama_kartu
+-- from "Skema_3"."Kopi_satu"
+-- where kartu is not null
+-- group by kartu
+-- order by nama_kartu desc;
+
+-- 9. di jam berapa pembelian ramai?
+-- jam berdasarkan jam saja
+-- select left(right(trim(tanggal_waktu),8),2) as jam, count(*) as banyak
+-- from "Skema_3"."Kopi_satu"
+-- group by jam
+-- order by jam asc;
+
+-- 10. menu profitable
+-- select menu, sum(harga) as rev
+-- from "Skema_3"."Kopi_satu"
+-- group by menu
+-- order by rev desc;
+
+-- 11. AOV
+-- select floor(sum(harga)/count(*)) as AOV
+-- from "Skema_3"."Kopi_satu"
+
+-- 12. cast hari, cast total transaksi per hari tanggal
+-- with tgl as(
+-- select tanggal, cast(tanggal as DATE) as tanggal_date
+-- from "Skema_3"."Kopi_satu"
+-- )
+-- select tanggal, TO_CHAR(tanggal_date, 'Day') as hari, count(tanggal_date)
+-- from tgl
+-- group by tanggal, tanggal_date
+-- order by tanggal asc;
+
+-- 13. total transaksi per hari
+-- with hr as(
+-- with tgl as(
+-- select tanggal, cast(tanggal as DATE) as tanggal_date
+-- from "Skema_3"."Kopi_satu"
+-- )
+-- select tanggal, TO_CHAR(tanggal_date, 'Day') as hari, count(tanggal_date) as txn_d
+-- from tgl
+-- group by tanggal, hari
+-- )
+-- select hari, sum(txn_d) as txn_hari
+-- from hr
+-- group by hari
+-- order by txn_hari desc;
+
+Query 2
+
+-- Query Kopi 1
+
+-- query seluruhnya
+-- select * 
+-- from "Skema_3"."Kopi_satu";
+
+-- 1. ada berapa total transaksi
+-- select count(*)
+-- from "Skema_3"."Kopi_satu";
+
+-- 2. transaksi masing-masing tanggal
+-- select tanggal, count(*)
+-- from "Skema_3"."Kopi_satu"
+-- group by tanggal
+-- order by tanggal asc;
+
+-- 3. menu apa yang disukai
+-- select menu, count(*) as total
+-- from "Skema_3"."Kopi_satu"
+-- group by menu
+-- order by total desc
+-- limit 1
+
+-- 4. berapa total revenue kotor
+-- select sum(harga)
+-- from "Skema_3"."Kopi_satu";
+
+-- 5. berapa total revenue di tgl tsb?
+-- select tanggal, sum(harga) as rev
+-- from "Skema_3"."Kopi_satu"
+-- group by tanggal
+-- order by tanggal asc;
+
+-- 6. revenue tertinggi di tanggal berapa?
+-- select tanggal, sum(harga) as rev
+-- from "Skema_3"."Kopi_satu"
+-- group by tanggal
+-- order by rev desc
+-- limit 1;
+
+-- 7. metode pembayaran yang disukai apa
+-- select pembayaran, count(*) as ditotalin
+-- from "Skema_3"."Kopi_satu"
+-- group by pembayaran
+-- order by ditotalin desc;
+
+-- 8. apakah ada pelanggan yang paling sering beli dan menunya apa?
+-- pelanggan hanya dibatasi oleh card number karena keterbatasan data
+-- select kartu, count(*) as nama_kartu
+-- from "Skema_3"."Kopi_satu"
+-- where kartu is not null
+-- group by kartu
+-- order by nama_kartu desc;
+
+-- 9. di jam berapa pembelian ramai?
+-- jam berdasarkan jam saja
+-- select left(right(trim(tanggal_waktu),8),2) as jam, count(*) as banyak
+-- from "Skema_3"."Kopi_satu"
+-- group by jam
+-- order by jam asc;
+
+-- 10. menu profitable
+-- select menu, sum(harga) as rev
+-- from "Skema_3"."Kopi_satu"
+-- group by menu
+-- order by rev desc;
+
+-- 11. AOV
+-- select floor(sum(harga)/count(*)) as AOV
+-- from "Skema_3"."Kopi_satu"
+
+-- 12. cast hari, cast total transaksi per hari tanggal
+-- with tgl as(
+-- select tanggal, cast(tanggal as DATE) as tanggal_date
+-- from "Skema_3"."Kopi_satu"
+-- )
+-- select tanggal, TO_CHAR(tanggal_date, 'Day') as hari, count(tanggal_date)
+-- from tgl
+-- group by tanggal, tanggal_date
+-- order by tanggal asc;
+
+-- 13. total transaksi per hari
+-- with hr as(
+-- with tgl as(
+-- select tanggal, cast(tanggal as DATE) as tanggal_date
+-- from "Skema_3"."Kopi_satu"
+-- )
+-- select tanggal, TO_CHAR(tanggal_date, 'Day') as hari, count(tanggal_date) as txn_d
+-- from tgl
+-- group by tanggal, hari
+-- )
+-- select hari, sum(txn_d) as txn_hari
+-- from hr
+-- group by hari
+-- order by txn_hari desc;
+
+Query 3 gabungan
+
+-- -- create view data_gabungan_kopi as
+-- select 
+-- 	CAST(tanggal as DATE), 
+-- 	CAST(tanggal_waktu as TIMESTAMP), 
+-- 	pembayaran, 
+-- 	kartu, 
+-- 	harga, 
+-- 	menu
+-- from "Skema_3"."Kopi_satu"
+
+-- UNION ALL
+
+-- select 
+-- 	CAST(TO_CHAR(TO_DATE(date, 'DD/MM/YYYY'), 'YYYY/MM/DD') AS DATE),
+-- 	CAST(TO_CHAR(TO_TIMESTAMP(datetime, 'DD/MM/YYYY HH24:MI'), 'YYYY/MM/DD HH24:MI:SS') AS TIMESTAMP), 
+-- 	cash_type, 
+-- 	NULL as Kartu, 
+-- 	money, 
+-- 	menu
+-- from "Skema_3"."Kopi_dua"
+-- -- select DISTINCT menu 
+-- -- from cek
+-- -- where menu LIKE '%Coffee%'
+
+-- -- -- menu americano with milk perlu disamakan
+
+-- coba bikin dim_facts
+-- dim facts sudah sesuai data gabungan kopi
+
+-- bikin dim_menu
+-- hanya terdiri dari harga dan menu
+
+-- create view dim_menu as
+-- select DISTINCT ROUND(avg(harga),2) as harga_jual, menu 
+-- from public.data_gabungan_kopi
+-- group by menu
+
+-- bikin dim_customer dan pembayaran
+-- create view dim_customer_kartu as
+-- select DISTINCT pembayaran, kartu
+-- from public.data_gabungan_kopi
+-- where pembayaran = 'card' and kartu is not null
